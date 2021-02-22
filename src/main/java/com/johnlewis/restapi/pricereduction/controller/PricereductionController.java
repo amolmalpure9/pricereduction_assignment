@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.johnlewis.restapi.pricereduction.bean.ColorSwatches;
-import com.johnlewis.restapi.pricereduction.bean.Products;
+import com.johnlewis.restapi.pricereduction.bean.Product;
 import com.johnlewis.restapi.pricereduction.contants.PricereductionConstants;
 import com.johnlewis.restapi.pricereduction.service.PricereductionService;
 import com.johnlewis.restapi.pricereduction.util.PricereductionUtils;
@@ -35,10 +35,10 @@ public class PricereductionController {
 	 */
 
 	@GetMapping(value = "/getPriceReducedItems")
-	public List<Products> getPriceReducedItems(@RequestParam(required = false) String labelType) {
+	public List<Product> getPriceReducedItems(@RequestParam(required = false) String labelType) {
 
 		labelType = PricereductionUtils.checkAndReturnLabelType(labelType);
-		List<Products> productList = pricereductionService.getPriceReducedItems(labelType);
+		List<Product> productList = pricereductionService.getPriceReducedItems(labelType);
 		return productList;
 	}
 

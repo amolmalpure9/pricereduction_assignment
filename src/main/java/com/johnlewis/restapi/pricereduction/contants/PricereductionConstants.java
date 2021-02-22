@@ -1,5 +1,10 @@
 package com.johnlewis.restapi.pricereduction.contants;
 
+/**
+ * 
+ * @author Amol
+ * This is used to set the application constants
+ */
 public class PricereductionConstants {
 
 	public static final String SHOW_WAS_NOW = "ShowWasNow";

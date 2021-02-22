@@ -9,10 +9,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.johnlewis.restapi.pricereduction.bean.AllProducts;
 import com.johnlewis.restapi.pricereduction.bean.Products;
+import com.johnlewis.restapi.pricereduction.bean.Product;
 import com.johnlewis.restapi.pricereduction.contants.PricereductionConstants;
 import com.johnlewis.restapi.pricereduction.service.PricereductionService;
+
+/**
+ * 
+ * @author Amol
+ * Class used to implement the service methods
+ */
 
 @Service
 public class PricereductionServiceImpl implements PricereductionService {
@@ -23,12 +29,16 @@ public class PricereductionServiceImpl implements PricereductionService {
 	@Value("${api.key}")
 	private String apiKey;
 
+	/***
+	 * This method i used for returning the reduced priced items with required label types 
+	 */
+	
 	@Override
-	public List<Products> getPriceReducedItems(String labelType) {
+	public List<Product> getPriceReducedItems(String labelType) {
 		String uri = "https://api.johnlewis.com/search/api/rest/v2/catalog/products/search/keyword?q=dresses&key="
 				+ apiKey;
-		AllProducts products = restTemplate.getForObject(uri, AllProducts.class);
-		List<Products> productList = null;
+		Products products = restTemplate.getForObject(uri, Products.class);
+		List<Product> productList = null;
 		// check if the products are not null and call
 		if (null != products && null != products.getProducts() && products.getProducts().size() > 0) {
 			productList = products.getProducts();
@@ -51,7 +61,14 @@ public class PricereductionServiceImpl implements PricereductionService {
 		return productList;
 	}
 
-	private void setPriceLabel(List<Products> productList, String labelType) {
+	/**
+	 * 
+	 * @param productList
+	 * @param labelType
+	 * 
+	 * This method is used to create a label type string based on the parameter provided
+	 */
+	private void setPriceLabel(List<Product> productList, String labelType) {
 		if (labelType.equals(PricereductionConstants.SHOW_WAS_NOW)) {
 			productList.forEach((o) -> {
 				if (null != o.getPrice() && null != o.getPrice().getNow() && null != o.getPrice().getWas())
@@ -74,7 +91,7 @@ public class PricereductionServiceImpl implements PricereductionService {
 		} else if (labelType.equals(PricereductionConstants.SHOW_PERC_DISCOUNT)) {
 
 			Double discountPerc = 0.0;
-			for (Products product : productList) {
+			for (Product product : productList) {
 				if (null != product.getPrice() && null != product.getPrice().getNow()
 						&& null != product.getPrice().getWas()) {
 					Double difference = Double.parseDouble(product.getPrice().getWas().toString())

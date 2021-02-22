@@ -12,6 +12,10 @@ import javafx.scene.paint.Color;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ColorSwatches {
 
+	public ColorSwatches() {
+		
+	}
+	
 	private String color;
 
 	@JsonProperty(access = Access.READ_ONLY)
