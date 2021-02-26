@@ -7,3 +7,9 @@ Tips to execute the code
    	http://localhost:8001/getPriceReducedItems
    
 	This will return the result as per problem statement given
+	
+Possible improvements 
+
+1.	Implement swagger for API documentation
+
+2.	Test set can be improved
