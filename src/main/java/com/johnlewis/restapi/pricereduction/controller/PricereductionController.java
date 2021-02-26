@@ -1,18 +1,17 @@
 package com.johnlewis.restapi.pricereduction.controller;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.johnlewis.restapi.pricereduction.bean.ColorSwatches;
 import com.johnlewis.restapi.pricereduction.bean.Product;
-import com.johnlewis.restapi.pricereduction.contants.PricereductionConstants;
 import com.johnlewis.restapi.pricereduction.service.PricereductionService;
-import com.johnlewis.restapi.pricereduction.util.PricereductionUtils;
 
 /**
  * @author Amol
@@ -35,11 +34,11 @@ public class PricereductionController {
 	 */
 
 	@GetMapping(value = "/getPriceReducedItems")
-	public List<Product> getPriceReducedItems(@RequestParam(required = false) String labelType) {
+	public ResponseEntity<List<Product>> getPriceReducedItems(@RequestParam(required = false) String labelType) {
 
-		labelType = PricereductionUtils.checkAndReturnLabelType(labelType);
 		List<Product> productList = pricereductionService.getPriceReducedItems(labelType);
-		return productList;
+		productList = null == productList ? new ArrayList<Product>() : productList;
+		return new ResponseEntity<List<Product>>(productList, HttpStatus.OK);
 	}
 
 }

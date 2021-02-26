@@ -11,14 +11,14 @@ public class Product {
 		
 	}
 	
-//	public Products(String productId, String title, List<ColorSwatches> colorSwatches, String priceLabel, Price price) {
-//		super();
-//		this.productId = productId;
-//		this.title = title;
-//		this.colorSwatches = colorSwatches;
-//		this.priceLabel = priceLabel;
-//		this.price = price;
-//	}
+	public Product(String productId, String title, List<ColorSwatches> colorSwatches, String priceLabel, Price price) {
+		super();
+		this.productId = productId;
+		this.title = title;
+		this.colorSwatches = colorSwatches;
+		this.priceLabel = priceLabel;
+		this.price = price;
+	}
 
 	private String productId;
 	private String title;

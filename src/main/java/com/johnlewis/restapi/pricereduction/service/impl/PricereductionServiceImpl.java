@@ -9,15 +9,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.johnlewis.restapi.pricereduction.bean.Products;
 import com.johnlewis.restapi.pricereduction.bean.Product;
+import com.johnlewis.restapi.pricereduction.bean.Products;
 import com.johnlewis.restapi.pricereduction.contants.PricereductionConstants;
 import com.johnlewis.restapi.pricereduction.service.PricereductionService;
+import com.johnlewis.restapi.pricereduction.util.PricereductionUtils;
 
 /**
  * 
- * @author Amol
- * Class used to implement the service methods
+ * @author Amol Class used to implement the service methods
  */
 
 @Service
@@ -29,34 +29,43 @@ public class PricereductionServiceImpl implements PricereductionService {
 	@Value("${api.key}")
 	private String apiKey;
 
+	@Value("${api.uri}")
+	private String apiUri;
+
 	/***
-	 * This method i used for returning the reduced priced items with required label types 
+	 * This method i used for returning the reduced priced items with required label
+	 * types
 	 */
-	
+
 	@Override
 	public List<Product> getPriceReducedItems(String labelType) {
-		String uri = "https://api.johnlewis.com/search/api/rest/v2/catalog/products/search/keyword?q=dresses&key="
-				+ apiKey;
-		Products products = restTemplate.getForObject(uri, Products.class);
 		List<Product> productList = null;
-		// check if the products are not null and call
-		if (null != products && null != products.getProducts() && products.getProducts().size() > 0) {
-			productList = products.getProducts();
 
-			// only get the list with price reduction
-			productList = productList.stream().filter(o -> o.getPrice() != null)
-					.filter(o -> (o.getPrice().getNow() instanceof String && o.getPrice().getWas() instanceof String))
-					.filter(o -> (o.getPrice().getNow() != null && !o.getPrice().getNow().toString().isEmpty()
-							&& o.getPrice().getWas() != null && !o.getPrice().getWas().toString().isEmpty()))
-					.filter(o -> (Double.parseDouble(o.getPrice().getWas().toString())
-							- Double.parseDouble(o.getPrice().getNow().toString()) > 0))
-					.sorted(Comparator.comparingDouble((o) -> (Double.parseDouble(o.getPrice().getNow().toString())
-							- Double.parseDouble(o.getPrice().getWas().toString()))))
-					.collect(Collectors.toList());
+		if (null != apiUri && !apiUri.isEmpty() && null != apiKey && !apiKey.isEmpty()) {
 
-			// set the price label
-			setPriceLabel(productList, labelType);
+			labelType = PricereductionUtils.checkAndReturnLabelType(labelType);
 
+			String uri = apiUri + apiKey;
+			Products products = restTemplate.getForObject(uri, Products.class);
+
+			// check if the products are not null and call
+			if (null != products && null != products.getProducts() && products.getProducts().size() > 0) {
+				productList = products.getProducts();
+
+				// only get the list with price reduction
+				productList = productList.stream().filter(o -> o.getPrice() != null).filter(
+						o -> (o.getPrice().getNow() instanceof String && o.getPrice().getWas() instanceof String))
+						.filter(o -> (o.getPrice().getNow() != null && !o.getPrice().getNow().toString().isEmpty()
+								&& o.getPrice().getWas() != null && !o.getPrice().getWas().toString().isEmpty()))
+						.filter(o -> (Double.parseDouble(o.getPrice().getWas().toString())
+								- Double.parseDouble(o.getPrice().getNow().toString()) > 0))
+						.sorted(Comparator.comparingDouble((o) -> (Double.parseDouble(o.getPrice().getNow().toString())
+								- Double.parseDouble(o.getPrice().getWas().toString()))))
+						.collect(Collectors.toList());
+
+				// set the price label
+				setPriceLabel(productList, labelType);
+			}
 		}
 		return productList;
 	}
@@ -66,7 +75,8 @@ public class PricereductionServiceImpl implements PricereductionService {
 	 * @param productList
 	 * @param labelType
 	 * 
-	 * This method is used to create a label type string based on the parameter provided
+	 *                    This method is used to create a label type string based on
+	 *                    the parameter provided
 	 */
 	private void setPriceLabel(List<Product> productList, String labelType) {
 		if (labelType.equals(PricereductionConstants.SHOW_WAS_NOW)) {
