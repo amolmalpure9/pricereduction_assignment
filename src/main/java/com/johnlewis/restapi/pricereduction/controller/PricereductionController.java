@@ -35,9 +35,15 @@ public class PricereductionController {
 
 	@GetMapping(value = "/getPriceReducedItems")
 	public ResponseEntity<List<Product>> getPriceReducedItems(@RequestParam(required = false) String labelType) {
-
-		List<Product> productList = pricereductionService.getPriceReducedItems(labelType);
-		productList = null == productList ? new ArrayList<Product>() : productList;
+		List<Product> productList = null;
+		try {
+			productList = pricereductionService.getPriceReducedItems(labelType);
+			productList = null == productList ? new ArrayList<Product>() : productList;
+		} catch (Exception exception) {
+			
+			//in practical scenario implement logging here logging 
+			productList = new ArrayList<Product>();
+		}
 		return new ResponseEntity<List<Product>>(productList, HttpStatus.OK);
 	}
 

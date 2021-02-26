@@ -6,8 +6,7 @@ import com.johnlewis.restapi.pricereduction.bean.Product;
 
 /**
  * 
- * @author Amol
- * This interface is used for defining service methods
+ * @author Amol This interface is used for defining service methods
  */
 public interface PricereductionService {
 
@@ -17,6 +16,7 @@ public interface PricereductionService {
 	 * 
 	 * @param labelType
 	 * @return
+	 * @throws Exception
 	 */
-	public List<Product> getPriceReducedItems(String labelType);
+	public List<Product> getPriceReducedItems(String labelType) throws Exception;
 }

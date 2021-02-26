@@ -17,6 +17,7 @@ public class ServiceTest {
 	4. 	Check for labelType param
 		a. Check if the param is blank or null and the default getting considered for that
 		b. Check if the param has any of the value given like ShowWasNow, ShowWasThenNow or SHOW_PERC_DISCOUNT	
-	
+	5. Check what if REST API throws exception due to incorrect API call
 	 * */
+
 }

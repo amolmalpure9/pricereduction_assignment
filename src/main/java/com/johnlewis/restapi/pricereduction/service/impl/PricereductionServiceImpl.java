@@ -35,18 +35,26 @@ public class PricereductionServiceImpl implements PricereductionService {
 	/***
 	 * This method i used for returning the reduced priced items with required label
 	 * types
+	 * 
+	 * @throws Exception
 	 */
 
 	@Override
-	public List<Product> getPriceReducedItems(String labelType) {
-		List<Product> productList = null;
+	public List<Product> getPriceReducedItems(String labelType) throws Exception {
 
+		List<Product> productList = null;
+		Products products = null;
 		if (null != apiUri && !apiUri.isEmpty() && null != apiKey && !apiKey.isEmpty()) {
 
 			labelType = PricereductionUtils.checkAndReturnLabelType(labelType);
 
 			String uri = apiUri + apiKey;
-			Products products = restTemplate.getForObject(uri, Products.class);
+
+			try {
+				products = restTemplate.getForObject(uri, Products.class);
+			} catch (Exception exception) {
+				throw new Exception("Error while calling the API. Please check request and required parameters");
+			}
 
 			// check if the products are not null and call
 			if (null != products && null != products.getProducts() && products.getProducts().size() > 0) {
